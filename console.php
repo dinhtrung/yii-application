@@ -6,10 +6,10 @@
 
 // change the following paths if necessary
 $yii=dirname(__FILE__).'/../yii/framework/yii.php';
-$config=dirname(__FILE__).'/protected/config/test.php';
+$config=dirname(__FILE__).'/protected/config/console.php';
 
 // remove the following line when in production mode
-defined('YII_DEBUG') or define('YII_DEBUG',true);
+defined('YII_DEBUG') or define('YII_DEBUG',TRUE);
 
 require_once($yii);
-Yii::createWebApplication($config)->run();
+Yii::createConsoleApplication($config)->run();

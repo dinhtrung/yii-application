@@ -1,7 +1,13 @@
 <?php
-
+Yii::setPathOfAlias("bootstrap", realpath(__DIR__ . '/../extensions/bootstrap'));
 return CMap::mergeArray(require(dirname(__FILE__).'/main.php'),	array(
+	'theme'		=>	'bootstrap',
+	'preload' 	=>	array('bootstrap'),
+	'import'	=>	array('bootstrap.helpers.TbHtml'),
 	'components'=>array(
+		'bootstrap'	=> array(
+			'class' => 'bootstrap.components.TbApi', 
+		),
 		// Yii::app()->urlManager
 		'urlManager'=>array(
 			'urlFormat'=>'get',			// @FIXME: `path` for better SEO, but require server configuration
@@ -33,6 +39,15 @@ return CMap::mergeArray(require(dirname(__FILE__).'/main.php'),	array(
 		),
 	),
 	'modules'	=>	array(
-		
+		// Use this to generate the template
+		'gii' => array(
+			'class' => 'system.gii.GiiModule',
+			'password' => 'myroot',
+			'generatorPaths' => array(
+				'ext.gtc',			//	Gii Template Collection
+				'bootstrap.gii',	// 	YiiStrap
+				'ext.gii',			// 	Customized templates
+			)
+		) ,
 	),
 ));
