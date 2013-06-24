@@ -53,13 +53,39 @@ abstract class WebBaseController extends BaseController
 
 	function filters() {
 		return array(
-			array('ext.components.AuthFilter + admin, update, create, delete'),
+			array('rights.components.RightsFilter'),
 //			"Language",
 // 			"Rights",
 //			array(
 //            	"ext.components.ESetReturnUrlFilter + index, admin, view",
 //			)
         );
+	}
+	
+	/**
+	* Denies the access of the user.
+	* @param string $message the message to display to the user.
+	* This method may be invoked when access check fails.
+	* @throws CHttpException when called unless login is required.
+	*/
+	public function accessDenied($message=null)
+	{
+		if( $message===null )
+			$message = Yii::t('rights', 'You are not authorized to perform this action.');
+
+		$user = Yii::app()->getUser();
+		if( $user->isGuest===true )
+			$user->loginRequired();
+		else
+			throw new CHttpException(403, $message);
+	}
+	
+	/**
+	* @return string the actions that are always allowed separated by commas.
+	*/
+	public function allowedActions()
+	{
+		return '*';
 	}
 
 	/**
@@ -73,6 +99,13 @@ abstract class WebBaseController extends BaseController
 			Yii::app()->end();
 		}
 	}
+	/**
+	 * Render the view
+	 * 
+	 * If this is an ajax request, we only display the minimum page by using renderPartial.
+	 * If this is a full page, we display them along with blocks configured by system.
+	 * @see CController::render()
+	 */
 	function render($view, $data = NULL, $return = FALSE, $renderBlock = TRUE) {
 		if (Yii::app()->request->isAjaxRequest){
 			$this->renderPartial($view, $data);
@@ -85,13 +118,12 @@ abstract class WebBaseController extends BaseController
 	}
 
 	protected function renderBlocks() {
-		$blockTypes = new Blocktype('search');
+		if (! Yii::app()->hasModule('core')) return;
+		$blockTypes = new BlockType('search');
 		$blocks = new Block('search');
-		$blockTheme = new Blocktheme('search');
+		$blockTheme = new BlockTheme('search');
 		$theme = (Yii::app()->theme instanceof CTheme)?Yii::app()->theme->name:Yii::app()->theme;
-		$blocks = $blockTheme->with('owner')->findAllByAttributes(
-				array("theme" => $theme)
-			);
+		$blocks = $blockTheme->with('owner')->findAllByAttributes( array("theme" => $theme) );
 		foreach ($blocks as $block){
 			if (array_key_exists($block->region, $this->page))
 				$this->page[$block->region] .= $block->owner->render();

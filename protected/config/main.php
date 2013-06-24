@@ -13,6 +13,7 @@ return CMap::mergeArray(require(dirname(__FILE__).'/database.php'), array(
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',
+		'ext.components.*',
 	),
 
 	// application components
@@ -26,6 +27,13 @@ return CMap::mergeArray(require(dirname(__FILE__).'/database.php'), array(
 				),
 			),
 		),
+		'messages'	=>	array(
+			'class'	=>	'CPhpMessageSource',
+			'onMissingTranslation' => array('CPhpMessageTranslator', 'writeMessage'),
+		),
+		'setting' => array(
+			'class' => 'application.components.Settings',
+		) ,
 	),
 	// application-level parameters that can be accessed
 	// using Yii::app()->params['paramName']

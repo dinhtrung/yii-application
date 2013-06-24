@@ -10,6 +10,7 @@ return array(
 		// Main Database Components
 		'db'=>array(
 			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
+			'tablePrefix' => '',
 		),
 		// uncomment the following to use a MySQL database
 		/*

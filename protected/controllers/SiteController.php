@@ -1,6 +1,6 @@
 <?php
 
-class SiteController extends WebBaseController
+class SiteController extends Controller
 {
 	/**
 	 * Declares class-based actions.
@@ -39,10 +39,7 @@ class SiteController extends WebBaseController
 	{
 		if($error=Yii::app()->errorHandler->error)
 		{
-			if(Yii::app()->request->isAjaxRequest)
-				echo $error['message'];
-			else
-				$this->render('error', $error);
+			$this->render('error', $error);
 		}
 	}
 
@@ -74,6 +71,8 @@ class SiteController extends WebBaseController
 
 	/**
 	 * Displays the login page
+	 * @deprecated 
+	 * Using yii-user module instead
 	 */
 	public function actionLogin()
 	{
