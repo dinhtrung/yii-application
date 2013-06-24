@@ -1,6 +1,6 @@
 <?php
 $this->breadcrumbs=array(
-	Yii::t('user', 'Users')=>array('admin'),
+	Yii::t('user', 'Users')	=>	array('admin'),
 	Yii::t('user', 'Manage'),
 );
 ?>
@@ -11,8 +11,10 @@ $this->breadcrumbs=array(
 	));
 ?>
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
+<?php $this->widget('bootstrap.widgets.TbGridView', array(
+	'id' => 'user-admin-grid',
 	'dataProvider'=>$model->search(),
+	'filter' => $model,
 	'columns'=>array(
 		array(
 			'name' => 'username',
@@ -24,15 +26,14 @@ $this->breadcrumbs=array(
 			'type'=>'raw',
 			'value'=>'CHtml::link(CHtml::encode($data->email), "mailto:".$data->email)',
 		),
-		'createtime:datetime',
 		'updatetime:datetime',
 		array(
 			'name'=>'status',
 			'value'=>'User::itemAlias("UserStatus",$data->status)',
 		),
-		'role',
+		array('name' => 'role', 'filter' => FALSE),
 		array(
-			'class'=>'EButtonColumn',
+			'class'=>'bootstrap.widgets.TbButtonColumn',
 		),
 	),
 )); ?>

@@ -10,5 +10,5 @@ $this->breadcrumbs=array(
 	echo $this->renderPartial('_menu',array(
 		'list'=> array(),
 	));
-	echo $this->renderPartial('_form', array('model'=>$model));
+	echo $this->renderPartial('_formUser', array('model'=>$model));
 ?>

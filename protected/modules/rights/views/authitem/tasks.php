@@ -11,8 +11,8 @@
 		<?php echo Yii::t('rights', 'Tasks exist below roles in the authorization hierarchy and can therefore only inherit from other tasks and/or operations.'); ?>
 	</p>
 
-	<p><?php echo CHtml::link(Yii::t('rights', 'Create a new task'), array('authItem/create', 'type'=>CAuthItem::TYPE_TASK), array(
-		'class'=>'add-task-link',
+	<p><?php echo CHtml::link(Yii::t('rights', 'Create a new task'), array('authitem/create', 'type'=>CAuthItem::TYPE_TASK), array(
+		'class'=>'add-task-link btn btn-primary',
 	)); ?></p>
 
 	<?php $this->widget('zii.widgets.grid.CGridView', array(

@@ -12,7 +12,18 @@ $this->breadcrumbs=array(
 	$attributes = array(
 		'username',
 		'email',
-		'activkey',
+		array(
+			'name' 	=> 'activkey', 
+			'value' => TbHtml::link(
+					Yii::t('user', 'Activate this User'), 
+					array('/user/activation', 
+							'email' => $model->email, 
+							'activkey' => $model->activkey
+					), 
+					array('class' => 'btn btn-warning')
+				),
+			'type'	=>	'raw',
+		),
 		'createtime:datetime',
 		'updatetime:datetime',
 		'role',

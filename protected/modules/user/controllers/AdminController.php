@@ -3,27 +3,28 @@
 class AdminController extends WebBaseController
 {
 	public $defaultAction = 'admin';
-
+	
 	/**
-	 * Manages all models.
+	 * Manage all User
 	 */
-	public function actions()
-	{
-		return array(
-			'view'		=>	array('class' => 'ext.actions.ViewAction', 'modelClass' => 'User'),
-			'admin'		=>	array('class' => 'ext.actions.AdminAction', 'modelClass' => 'User'),
-			'create'	=>	array('class' => 'ext.actions.CreateAction', 'modelClass' => 'User'),
-			'update'	=>	array('class' => 'ext.actions.UpdateAction', 'modelClass' => 'User'),
-			'delete'	=>	array('class' => 'ext.actions.DeleteAction', 'modelClass' => 'User'),
-		);
+	public function actionAdmin(){
+		$model = new User('search');
+		$this->render('adminUser', array('model' => $model));
 	}
-
+	
+	/**
+	 * Display details for an user
+	 */
+	public function actionView(){
+		$model = $this->loadModel('User');
+		$this->render('viewUser', array('model' => $model));
+	}
 
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
-	public function actionCreateA()
+	public function actionCreate()
 	{
 		$model=new User;
 		$this->performAjaxValidation($model, 'user-form');
@@ -43,15 +44,14 @@ class AdminController extends WebBaseController
 				$model->password=Yii::app()->controller->module->encrypting($model->password);
 				if($model->save()) {
 					// Update and redirect
-					Rights::getAuthorizer()->authManager->assign($model->role, $model->getId());
-					$item = Rights::getAuthorizer()->authManager->getAuthItem($model->role);
-					$item = Rights::getAuthorizer()->attachAuthItemBehavior($item);
-					$this->redirect(Yii::app()->getUser()->getReturnUrl());
+					foreach ($model->role as $role)
+						Rights::getAuthorizer()->authManager->assign($role, $model->getId());
+					$this->redirect(array('view', 'id' => $model->id));
 				}
 			}
 		}
 
-		$this->render('create',array(
+		$this->render('createUser',array(
 			'model'=>$model,
 		));
 	}
@@ -60,31 +60,37 @@ class AdminController extends WebBaseController
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 */
-	public function actionUpdateOld()
+	public function actionUpdate()
 	{
 		$model=$this->loadModel('User');
 		$this->performAjaxValidation($model, 'user-form');
-		Rights::getAuthorizer()->attachUserBehavior($model);
-		Rights::getAuthorizer()->authManager->revoke($model->role, $model->getId());
 		if(isset($_POST['User']))
 		{
 			$model->attributes=$_POST['User'];
 
 			if($model->validate()) {
-				$old_password = User::model()->notsafe()->findByPk($model->id);
+				$old_password = User::model()->findByPk($model->id);
+				$old_role = Rights::getAuthorizer()->getAuthItems(NULL, $model->id);
 				if (! empty($model->password) AND ($old_password->password!=$model->password)) {
 					$model->password=Yii::app()->controller->module->encrypting($model->password);
 					$model->activkey=Yii::app()->controller->module->encrypting(microtime().$model->password);
 				} else { $model->password = $old_password->password; }
-				$model->save();
-				Rights::getAuthorizer()->authManager->assign($model->role, $model->getId());
-				$item = Rights::getAuthorizer()->authManager->getAuthItem($model->role);
-				$item = Rights::getAuthorizer()->attachAuthItemBehavior($item);
-				$this->redirect(Yii::app()->getUser()->getReturnUrl());
+				if ($model->save()){
+					// Find the difference between new and old roles and delete unassigned one..
+					foreach ($old_role as $name => $item){
+						if (! in_array($name, $model->role)) $item->revoke($model->id);
+					}
+					$oldAuthNames = array_keys($old_role);
+					foreach ($model->role as $role){
+						if (in_array($role, $oldAuthNames)) continue;
+						Rights::getAuthorizer()->authManager->assign($role, $model->getId());
+					}
+					$this->redirect(array('view', 'id' => $model->id));
+				}
 			}
 		}
 
-		$this->render('update',array(
+		$this->render('updateUser',array(
 			'model'=>$model,
 		));
 	}

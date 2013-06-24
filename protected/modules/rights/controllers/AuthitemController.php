@@ -170,7 +170,7 @@ class AuthitemController extends WebBaseController
 				$generator->addItems($items['operations'], CAuthItem::TYPE_OPERATION);
 				if( ($generatedItems = $generator->run())!==false && $generatedItems!==array() )
 				{
-					Yii::app()->getUser()->setFlash($this->module->flashSuccessKey,
+					Yii::app()->getUser()->setFlash('success',
 						Yii::t('rights', 'Authorization items created.')
 					);
 					$this->redirect(array('authItem/permissions'));
@@ -211,11 +211,11 @@ class AuthitemController extends WebBaseController
 		$type = $this->getType();
 
 		// Create the authorization item form
-		$formModel = new Authitem('insert');
+		$formModel = new AuthItem('insert');
 
-		if( isset($_POST['Authitem'])===true )
+		if( isset($_POST['AuthItem'])===true )
 		{
-			$formModel->attributes = $_POST['Authitem'];
+			$formModel->attributes = $_POST['AuthItem'];
 			if( $formModel->validate()===true )
 			{
 				// Create the item
@@ -223,7 +223,7 @@ class AuthitemController extends WebBaseController
 				$item = $this->_authorizer->attachAuthItemBehavior($item);
 
 				// Set a flash message for creating the item
-				Yii::app()->user->setFlash($this->module->flashSuccessKey,
+				Yii::app()->user->setFlash('success',
 					Yii::t('rights', ':name created.', array(':name'=>$item->getNameText()))
 				);
 
@@ -250,9 +250,9 @@ class AuthitemController extends WebBaseController
 		// Create the authorization item form
 		$formModel = new Authitem('update');
 
-		if( isset($_POST['Authitem'])===true )
+		if( isset($_POST['AuthItem'])===true )
 		{
-			$formModel->attributes = $_POST['Authitem'];
+			$formModel->attributes = $_POST['AuthItem'];
 			if( $formModel->validate()===true )
 			{
 				// Update the item and load it
@@ -261,7 +261,7 @@ class AuthitemController extends WebBaseController
 				$item = $this->_authorizer->attachAuthItemBehavior($item);
 
 				// Set a flash message for updating the item
-				Yii::app()->user->setFlash($this->module->flashSuccessKey,
+				Yii::app()->user->setFlash('success',
 					Yii::t('rights', ':name updated.', array(':name'=>$item->getNameText()))
 				);
 
@@ -290,7 +290,7 @@ class AuthitemController extends WebBaseController
 					$child = $this->_authorizer->attachAuthItemBehavior($child);
 
 					// Set a flash message for adding the child
-					Yii::app()->user->setFlash($this->module->flashSuccessKey,
+					Yii::app()->user->setFlash('success',
 						Yii::t('rights', 'Child :name added.', array(':name'=>$child->getNameText()))
 					);
 
@@ -342,7 +342,7 @@ class AuthitemController extends WebBaseController
 			$this->_authorizer->authManager->removeAuthItem($itemName);
 
 			// Set a flash message for deleting the item
-			Yii::app()->user->setFlash($this->module->flashSuccessKey,
+			Yii::app()->user->setFlash('success',
 				Yii::t('rights', ':name deleted.', array(':name'=>$item->getNameText()))
 			);
 
@@ -373,7 +373,7 @@ class AuthitemController extends WebBaseController
 			$child = $this->_authorizer->attachAuthItemBehavior($child);
 
 			// Set a flash message for removing the child
-			Yii::app()->user->setFlash($this->module->flashSuccessKey,
+			Yii::app()->user->setFlash('success',
 				Yii::t('rights', 'Child :name removed.', array(':name'=>$child->getNameText()))
 			);
 

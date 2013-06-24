@@ -7,14 +7,9 @@
 
 	<h1><?php echo $this->pageTitle =  Yii::t('rights', 'Roles'); ?></h1>
 
-	<p>
-		<?php echo Yii::t('rights', 'A role is group of permissions to perform a variety of tasks and operations, for example the authenticated user.'); ?><br />
-		<?php echo Yii::t('rights', 'Roles exist at the top of the authorization hierarchy and can therefore inherit from other roles, tasks and/or operations.'); ?>
-	</p>
+	<?php echo TbHtml::well(Yii::t('rights', 'A role is group of permissions to perform a variety of tasks and operations, for example the authenticated user.<br/>Roles exist at the top of the authorization hierarchy and can therefore inherit from other roles, tasks and/or operations.')); ?>
 
-	<p><?php echo CHtml::link(Yii::t('rights', 'Create a new role'), array('authItem/create', 'type'=>CAuthItem::TYPE_ROLE), array(
-	   	'class'=>'add-role-link',
-	)); ?></p>
+	<p><?php echo CHtml::link(Yii::t('rights', 'Create a new role'), array('authitem/create', 'type'=>CAuthItem::TYPE_ROLE), array( 'class'=>'add-role-link btn btn-success', )); ?></p>
 
 	<?php $this->widget('zii.widgets.grid.CGridView', array(
 	    'dataProvider'=>$dataProvider,

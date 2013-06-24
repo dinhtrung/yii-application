@@ -15,7 +15,7 @@ class RecoveryController extends Controller
 				$activkey = ((isset($_GET['activkey']))?$_GET['activkey']:'');
 				if ($email&&$activkey) {
 					$form2 = new UserChangePassword;
-		    		$find = User::model()->notsafe()->findByAttributes(array('email'=>$email));
+		    		$find = User::model()->findByAttributes(array('email'=>$email));
 		    		if(isset($find)&&$find->activkey==$activkey) {
 			    		if(isset($_POST['UserChangePassword'])) {
 							$form2->attributes=$_POST['UserChangePassword'];
@@ -39,7 +39,7 @@ class RecoveryController extends Controller
 			    	if(isset($_POST['UserRecoveryForm'])) {
 			    		$form->attributes=$_POST['UserRecoveryForm'];
 			    		if($form->validate()) {
-			    			$user = User::model()->notsafe()->findbyPk($form->user_id);
+			    			$user = User::model()->findbyPk($form->user_id);
 							$activation_url = 'http://' . $_SERVER['HTTP_HOST'].$this->createUrl(implode(Yii::app()->controller->module->recoveryUrl),array("activkey" => $user->activkey, "email" => $user->email));
 							
 							$subject = Yii::t('user', "You have requested the password recovery site {site_name}",

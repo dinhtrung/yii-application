@@ -1,8 +1,7 @@
 <div class="form span-12 first">
-
 <?php if( $model->scenario==='update' ): ?>
 
-	<h3><?php echo Rights::getAuthItemTypeName($model->type); ?></h3>
+<h3><?php echo Rights::getAuthItemTypeName($model->type); ?></h3>
 
 <?php endif; ?>
 	

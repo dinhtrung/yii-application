@@ -38,35 +38,36 @@ class RightsFilter extends CFilter
 		$controller = $filterChain->controller;
 		$action = $filterChain->action;
 
-		if (is_null($this->_allowedActions) && method_exists($controller, 'allowedActions')) 
+		// Append the module id to the authorization item name
+		// in case the controller called belongs to a module
+		if( ($module = $controller->getModule())!==null )
+			$this->authItem .= $module->id.'/';
+		// Append the controller id to the authorization item name
+		$this->authItem .= $controller->id;
+			
+		$task = $this->authItem . '/*';
+// 		if (YII_DEBUG)
+			Rights::getAuthorizer()->createAuthItem($task, CAuthItem::TYPE_TASK);
+
+		// Append the action id to the authorization item name
+		$operation = $this->authItem .'/'.$action->id;
+// 		if (YII_DEBUG)
+			Rights::getAuthorizer()->createAuthItem($operation, CAuthItem::TYPE_OPERATION);
+		
+		
+		if (is_null($this->_allowedActions) && method_exists($controller, 'allowedActions'))
 			$this->_allowedActions = $controller->allowedActions();
 		if (is_string($this->_allowedActions)) {
 			if ($this->_allowedActions == '*') return TRUE;
 			$this->_allowedActions = explode(',', preg_replace('/\s+/', '', $this->_allowedActions));
 		}
-
 		// Check if the action should be allowed
-		if(in_array($action->id, $this->_allowedActions))
+		if(! in_array($action->id, $this->_allowedActions))
 		{
-			// Append the module id to the authorization item name
-			// in case the controller called belongs to a module
-			if( ($module = $controller->getModule())!==null )
-				$this->authItem .= $module->id.'/';
-
-			// Append the controller id to the authorization item name
-			$this->authItem .= $controller->id;
-			
-			$task = $this->authItem . '/*';
-			if (YII_DEBUG) Rights::getAuthorizer()->createAuthItem($task, CAuthItem::TYPE_TASK);
-
 			// Check if user has access to the controller
 			if( $user->checkAccess($task)!==true ) {
-				// Append the action id to the authorization item name
-				$operation = $this->authItem .'/'.$action->id;
-
 				// Check if the user has access to the controller action
 				if( $user->checkAccess($operation)!==true ){
-					if (YII_DEBUG) Rights::getAuthorizer()->createAuthItem($operation, CAuthItem::TYPE_OPERATION);
 					$allow = false;
 				}
 			}

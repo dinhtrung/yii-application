@@ -121,7 +121,7 @@ class RAuthItemBehavior extends CBehavior
 	public function getDeleteTaskLink()
 	{
 		return CHtml::linkButton(Yii::t('rights', 'Delete'), array(
-			'submit'=>array(authitem/delete', 'name'=>urlencode($this->owner->name)),
+			'submit'=>array('authitem/delete', 'name'=>urlencode($this->owner->name)),
 			'confirm'=>Yii::t('rights', 'Are you sure you want to delete this task?'),
 			'class'=>'delete-link',
 			'csrf'=>Yii::app()->request->enableCsrfValidation,
@@ -138,7 +138,7 @@ class RAuthItemBehavior extends CBehavior
 		if( $this->owner->name!==Rights::module()->superuserName )
 		{
 			return CHtml::linkButton(Yii::t('rights', 'Delete'), array(
-				'submit'=>array(authitem/delete', 'name'=>urlencode($this->owner->name)),
+				'submit'=>array('authitem/delete', 'name'=>urlencode($this->owner->name)),
 				'confirm'=>Yii::t('rights', 'Are you sure you want to delete this role?'),
 				'class'=>'delete-link',
 				'csrf'=>Yii::app()->request->enableCsrfValidation,
@@ -153,7 +153,7 @@ class RAuthItemBehavior extends CBehavior
 	public function getRemoveParentLink()
 	{
 		return CHtml::linkButton(Yii::t('rights', 'Remove'), array(
-			'submit'=>array(authitem/removeChild', 'name'=>urlencode($this->owner->name), 'child'=>urlencode($this->parent->name)),
+			'submit'=>array('authitem/removeChild', 'name'=>urlencode($this->owner->name), 'child'=>urlencode($this->parent->name)),
 			'class'=>'remove-link',
 			'csrf'=>Yii::app()->request->enableCsrfValidation,
 		));
@@ -166,7 +166,7 @@ class RAuthItemBehavior extends CBehavior
 	public function getRemoveChildLink()
 	{
 		return CHtml::linkButton(Yii::t('rights', 'Remove'), array(
-			'submit'=>array(authitem/removeChild', 'name'=>urlencode($this->parent->name), 'child'=>urlencode($this->owner->name)),
+			'submit'=>array('authitem/removeChild', 'name'=>urlencode($this->parent->name), 'child'=>urlencode($this->owner->name)),
 			'class'=>'remove-link',
 			'csrf'=>Yii::app()->request->enableCsrfValidation,
 		));

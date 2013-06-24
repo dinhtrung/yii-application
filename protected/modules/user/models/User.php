@@ -158,13 +158,13 @@ class User extends BaseActiveRecord
 	public static function itemAlias($type,$code=NULL) {
 		$_items = array(
 			'UserStatus' => array(
-				self::STATUS_NOACTIVE => Yii::t('user', 'Not active'),
 				self::STATUS_ACTIVE => Yii::t('user', 'Active'),
+				self::STATUS_NOACTIVE => Yii::t('user', 'Not active'),
 				self::STATUS_BANED => Yii::t('user', 'Banned'),
 			),
 			'AdminStatus' => array(
-				'0' => Yii::t('user', 'No'),
 				'1' => Yii::t('user', 'Yes'),
+				'0' => Yii::t('user', 'No'),
 			),
 		);
 		if (isset($code))
@@ -191,32 +191,5 @@ class User extends BaseActiveRecord
 	protected function beforeSave(){
 		if ($this->password) $this->password = UserModule::encrypting($this->password);
 		return parent::beforeSave();
-	}
-
-	/**
-	 * Save all Auth Items assigned for this user
-	 * @see CActiveRecord::afterSave()
-	 */
-	protected function afterSave(){
-		$userId = $this->getPrimaryKey();
-		foreach ($this->role as $role){
-			Rights::getAuthorizer()->authManager->assign($role, $userId);
-			$item = Rights::getAuthorizer()->authManager->getAuthItem($role);
-			$item = Rights::getAuthorizer()->attachAuthItemBehavior($item);
-		}
-		return parent::afterSave();
-	}
-	
-	/**
-	 * Revoke all Auth Items from deleted user
-	 * @see CActiveRecord::beforeDelete()
-	 */
-	protected function beforeDelete(){
-		$userId = $this->getPrimaryKey();
-		$assignedItems = Rights::getAuthorizer()->getAuthItems(NULL, $userId);
-		foreach ($assignedItems as $item){
-			$item->revoke($userId);
-		}
-		return parent::beforeDelete();
 	}
 }
