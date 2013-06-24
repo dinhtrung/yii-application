@@ -2,46 +2,38 @@
 /* @var $this SiteController */
 /* @var $model LoginForm */
 /* @var $form CActiveForm  */
-
-$this->pageTitle=Yii::app()->name . ' - Login';
 $this->breadcrumbs=array(
-	'Login',
+	Yii::t('app', 'Login'),
 );
 ?>
+<div class="span8 offset2">
 
-<h1>Login</h1>
+<h1><?php echo $this->pageTitle = Yii::t('app', ':app Login', array(':app' => Yii::app()->name)); ?></h1>
 
-<p>Please fill out the following form with your login credentials:</p>
-
-<div class="form">
+<?php echo TbHtml::well(Yii::t('app', 'Please fill out the following form with your login credentials')); ?>
 
 <?php $form=$this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 	'id'=>'login-form',
-    'type'=>'horizontal',
+	'action' => Yii::app()->user->loginUrl,
+    'layout'=> TbHtml::FORM_LAYOUT_HORIZONTAL,
 	'enableClientValidation'=>true,
 	'clientOptions'=>array(
 		'validateOnSubmit'=>true,
 	),
 )); ?>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
 
-	<?php echo $form->textFieldRow($model,'username'); ?>
+	<?php echo $form->textFieldControlGroup($model,'username'); ?>
 
-	<?php echo $form->passwordFieldRow($model,'password',array(
-        'hint'=>'Hint: You may login with <kbd>demo</kbd>/<kbd>demo</kbd> or <kbd>admin</kbd>/<kbd>admin</kbd>',
+	<?php echo $form->passwordFieldControlGroup($model,'password',array(
+        'help'=>'Hint: You may login with <kbd>demo</kbd>/<kbd>demo</kbd> or <kbd>admin</kbd>/<kbd>admin</kbd>',
     )); ?>
 
-	<?php echo $form->checkBoxRow($model,'rememberMe'); ?>
+	<?php echo $form->checkBoxControlGroup($model,'rememberMe'); ?>
 
-	<div class="form-actions">
-		<?php $this->widget('bootstrap.widgets.TbButton', array(
-            'buttonType'=>'submit',
-            'type'=>'primary',
-            'label'=>'Login',
-        )); ?>
-	</div>
-
+	<?php echo TbHtml::formActions(array(
+		TbHtml::submitButton(Yii::t('app', 'Login'), array('color' => TbHtml::BUTTON_COLOR_PRIMARY)),
+		TbHtml::resetButton('Reset'),
+	)); ?>
 <?php $this->endWidget(); ?>
-
-</div><!-- form -->
+</div>
