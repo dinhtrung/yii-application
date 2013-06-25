@@ -42,6 +42,9 @@ return CMap::mergeArray(require(dirname(__FILE__).'/main.php'),	array(
 			'allowAutoLogin'	=>	TRUE,	// @FIXME: For Secure sites, do not use this
 			'loginUrl' => array('/user/login') ,
 		),
+		'format'	=>	array(
+			'class'	=>	'ext.components.EFormatter',
+		),
 		'authManager' => array(
 			'class' => 'RDbAuthManager',
 			'connectionID' => 'db',
@@ -58,10 +61,43 @@ return CMap::mergeArray(require(dirname(__FILE__).'/main.php'),	array(
 			'routes'=>array(
 				array(
 					'class'=>'CWebLogRoute',
-					'levels'=>'error, warning',
+					'levels'=>'trace',
 				),
 			),
 		),
+			'widgetFactory'=> array(
+				'class' => 'CWidgetFactory',
+				'widgets' => array(
+					'CGridView'=>array(
+							'itemsCssClass'=>'item-class',
+							'pagerCssClass'=>'pager-class'
+					),
+					'TbActiveForm'=>array(
+						'htmlOptions'=>array('class' => 'form-horizontal'),
+					),
+					'CJuiAccordion'=>array(
+							'htmlOptions'=>array('class'=>'shadowaccordion'),
+					),
+					'CJuiProgressBar'=>array(
+							'htmlOptions'=>array('class'=>'shadowprogressbar'),
+					),
+					'CJuiSlider'=>array(
+							'htmlOptions'=>array('class'=>'shadowslider'),
+					),
+					'CJuiSliderInput'=>array(
+							'htmlOptions'=>array('class'=>'shadowslider'),
+					),
+					'CJuiButton'=>array(
+							'htmlOptions'=>array('class'=>'shadowbutton'),
+					),
+					'CJuiButton'=>array(
+							'htmlOptions'=>array('class'=>'shadowbutton'),
+					),
+					'CJuiButton'=>array(
+							'htmlOptions'=>array('class'=>'button green'),
+					),
+				)
+			),
 	),
 	'modules'	=>	array(
 		'user',

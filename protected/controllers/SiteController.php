@@ -1,7 +1,10 @@
 <?php
 
-class SiteController extends Controller
+class SiteController extends WebBaseController
 {
+	public function allowedActions(){
+		return '*';
+	}
 	/**
 	 * Declares class-based actions.
 	 */

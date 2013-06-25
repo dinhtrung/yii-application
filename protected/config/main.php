@@ -23,7 +23,7 @@ return CMap::mergeArray(require(dirname(__FILE__).'/database.php'), array(
 			'routes'=>array(
 				array(
 					'class'=>'CFileLogRoute',
-					'levels'=>'error, warning',
+					'levels'=>'trace',
 				),
 			),
 		),

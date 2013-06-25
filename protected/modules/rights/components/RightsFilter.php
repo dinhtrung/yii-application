@@ -29,34 +29,24 @@ class RightsFilter extends CFilter
 	*/
 	protected function preFilter($filterChain)
 	{
-		// By default we assume that the user is allowed access
 		$allow = true;
 
 		$user = Yii::app()->getUser();
-		if ($user->isGuest) $user->loginRequired();
-		
 		$controller = $filterChain->controller;
 		$action = $filterChain->action;
 
-		// Append the module id to the authorization item name
-		// in case the controller called belongs to a module
-		if( ($module = $controller->getModule())!==null )
-			$this->authItem .= $module->id.'/';
-		// Append the controller id to the authorization item name
+		/**
+		 * The authItem is [moduleId/]controlerId/actionId
+		 */
+		if( ($module = $controller->getModule())!==null ) $this->authItem .= $module->id.'/';
 		$this->authItem .= $controller->id;
-			
 		$task = $this->authItem . '/*';
-// 		if (YII_DEBUG)
-			Rights::getAuthorizer()->createAuthItem($task, CAuthItem::TYPE_TASK);
-
-		// Append the action id to the authorization item name
 		$operation = $this->authItem .'/'.$action->id;
-// 		if (YII_DEBUG)
-			Rights::getAuthorizer()->createAuthItem($operation, CAuthItem::TYPE_OPERATION);
+			
+ 		if (YII_DEBUG) Rights::getAuthorizer()->createAuthItem($task, CAuthItem::TYPE_TASK);
+ 		if (YII_DEBUG) Rights::getAuthorizer()->createAuthItem($operation, CAuthItem::TYPE_OPERATION);
+		if (method_exists($controller, 'allowedActions')) $this->_allowedActions = $controller->allowedActions();
 		
-		
-		if (is_null($this->_allowedActions) && method_exists($controller, 'allowedActions'))
-			$this->_allowedActions = $controller->allowedActions();
 		if (is_string($this->_allowedActions)) {
 			if ($this->_allowedActions == '*') return TRUE;
 			$this->_allowedActions = explode(',', preg_replace('/\s+/', '', $this->_allowedActions));
@@ -65,18 +55,21 @@ class RightsFilter extends CFilter
 		if(! in_array($action->id, $this->_allowedActions))
 		{
 			// Check if user has access to the controller
-			if( $user->checkAccess($task)!==true ) {
+			if( $user->checkAccess($task)!== TRUE ) {
 				// Check if the user has access to the controller action
-				if( $user->checkAccess($operation)!==true ){
-					$allow = false;
+				if( $user->checkAccess($operation)!== TRUE ){
+					$allow = FALSE;
 				}
 			}
 		}
 
 		// User is not allowed access, deny access
-		if( $allow===false ) throw new CHttpException(403, 'Access denied');
+		if( $allow == FALSE ) {
+			if ($user->isGuest) $user->loginRequired();
+			else throw new CHttpException(403, 'Access denied');
+		}
 
 		// Authorization item did not exist or the user had access, allow access
-		return true;
+		return TRUE;
 	}
 }
