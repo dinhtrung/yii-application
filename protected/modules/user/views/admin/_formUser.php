@@ -21,6 +21,7 @@
 		TbHtml::submitButton(Yii::t('app', 'Submit'), array('color' => TbHtml::BUTTON_COLOR_PRIMARY)),
 		TbHtml::resetButton(Yii::t('app', 'Reset'), array('color' => TbHtml::BUTTON_COLOR_DANGER)),
 	)); ?>
+	
 <?php $this->endWidget(); ?>
 
 </div><!-- form -->

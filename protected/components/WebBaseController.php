@@ -32,60 +32,25 @@ abstract class WebBaseController extends BaseController
 	 */
 	public function init() {
 		parent::init();
-		/*
-		 * Load all modules/views/layouts/_menu files to render the global file
-		 */
-		$this->mainMenu = array();
-		$modules = Yii::app()->getModules();
-		try {
-			Yii::app()->getController()->renderPartial("//layouts/_menu");
-		} catch (CException $e){
-			Yii::log('Catch error while loading module menu: '.$e->getMessage(), 'debug');
-		}
-		foreach ($modules as $m => $info){
-			try {
-				Yii::app()->getController()->renderPartial("//../modules/$m/views/layouts/_menu");
-			} catch (CException $e){
-				Yii::log('Catch error while loading module menu: '.$e->getMessage(), 'debug');
-			}
-		}
 	}
 
 	function filters() {
 		return array(
 			array('rights.components.RightsFilter'),
 //			"Language",
-// 			"Rights",
 //			array(
 //            	"ext.components.ESetReturnUrlFilter + index, admin, view",
 //			)
         );
 	}
 	
-	/**
-	* Denies the access of the user.
-	* @param string $message the message to display to the user.
-	* This method may be invoked when access check fails.
-	* @throws CHttpException when called unless login is required.
-	*/
-	public function accessDenied($message=null)
-	{
-		if( $message===null )
-			$message = Yii::t('rights', 'You are not authorized to perform this action.');
-
-		$user = Yii::app()->getUser();
-		if( $user->isGuest===true )
-			$user->loginRequired();
-		else
-			throw new CHttpException(403, $message);
-	}
 	
 	/**
 	* @return string the actions that are always allowed separated by commas.
 	*/
 	public function allowedActions()
 	{
-		return '*';
+		return '';
 	}
 
 	/**
@@ -106,17 +71,19 @@ abstract class WebBaseController extends BaseController
 	 * If this is a full page, we display them along with blocks configured by system.
 	 * @see CController::render()
 	 */
-	function render($view, $data = NULL, $return = FALSE, $renderBlock = TRUE) {
+	function render($view, $data = NULL, $return = FALSE) {
 		if (Yii::app()->request->isAjaxRequest){
 			$this->renderPartial($view, $data);
 		} else {
-			if ($renderBlock && Yii::app()->hasModule('core')){
-				$this->renderBlocks();
-			}
+			if (Yii::app()->hasModule('core')) $this->renderBlocks();
+			$this->renderMenus();
 			parent::render($view, $data, $return);
 		}
 	}
 
+	/**
+	 * Render all the blocks configured from Database
+	 */
 	protected function renderBlocks() {
 		if (! Yii::app()->hasModule('core')) return;
 		$blockTypes = new BlockType('search');
@@ -129,6 +96,25 @@ abstract class WebBaseController extends BaseController
 				$this->page[$block->region] .= $block->owner->render();
 			else 
 				$this->page[$block->region] = $block->owner->render();
+		}
+	}
+	/**
+	 * Render the menu provided by system and modules
+	 * Load all modules/views/layouts/_menu files to render the global file
+	 */
+	protected function renderMenus(){
+		$modules = Yii::app()->getModules();
+		try {
+			Yii::app()->getController()->renderPartial("//layouts/_menu");
+		} catch (CException $e){
+			Yii::log('Catch error while loading module menu: '.$e->getMessage(), 'debug');
+		}
+		foreach ($modules as $m => $info){
+			try {
+				Yii::app()->getController()->renderPartial("//../modules/$m/views/layouts/_menu".ucfirst($m));
+			} catch (CException $e){
+				Yii::trace('Missing module Menu: '."//../modules/$m/views/layouts/_menu".ucfirst($m), 'webBaseController');
+			}
 		}
 	}
 }
