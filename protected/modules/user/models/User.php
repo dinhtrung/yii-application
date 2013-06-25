@@ -184,12 +184,4 @@ class User extends BaseActiveRecord
 		}
 		return parent::afterFind();
 	}
-
-	/*
-	 * Encrypt the password
-	 */
-	protected function beforeSave(){
-		if ($this->password) $this->password = UserModule::encrypting($this->password);
-		return parent::beforeSave();
-	}
 }

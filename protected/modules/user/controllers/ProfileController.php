@@ -14,7 +14,7 @@ class ProfileController extends WebBaseController
 	 */
 	public function actionProfile()
 	{
-		$model = $this->loadUser();
+		$model = UserModule::user();
 	    $this->render('profile',array(
 	    	'model'=>$model,
 	    ));
@@ -27,27 +27,20 @@ class ProfileController extends WebBaseController
 	 */
 	public function actionEdit()
 	{
-		$model = $this->loadUser();
-
-		// ajax validator
-		if(isset($_POST['ajax']))
-		{
-			echo UActiveForm::validate(array($model));
-			Yii::app()->end();
-		}
-
+		$model = UserModule::user();
+		
+		$this->performAjaxValidation($model, 'profile-form');
+		
 		if(isset($_POST['User']))
 		{
-			$model->attributes=$_POST['User'];
+			$model->setAttributes($_POST['User']);
 
-			if($model->validate()) {
-				$model->save();
-				Yii::app()->user->setFlash('profileMessage',Yii::t('user', "Changes is saved."));
-				$this->redirect(array('/user/profile'));
+			if($model->save()) {
+				Yii::app()->user->setFlash('success',Yii::t('user', "Changes is saved."));
 			}
 		}
 
-		$this->render('edit',array(
+		$this->render('editProfile',array(
 			'model'=>$model,
 		));
 	}
@@ -56,45 +49,25 @@ class ProfileController extends WebBaseController
 	 * Change password
 	 */
 	public function actionChangepassword() {
+		
 		$model = new UserChangePassword;
 		if (Yii::app()->user->id) {
-
-			// ajax validator
-			if(isset($_POST['ajax']) && $_POST['ajax']==='changepassword-form')
-			{
-				echo UActiveForm::validate($model);
-				Yii::app()->end();
-			}
+			
+			$this->performAjaxValidation($model, 'changepassword-form');
 
 			if(isset($_POST['UserChangePassword'])) {
 					$model->attributes=$_POST['UserChangePassword'];
 					if($model->validate()) {
 						$new_password = User::model()->findbyPk(Yii::app()->user->id);
 						$new_password->password = UserModule::encrypting($model->password);
-						$new_password->activkey=UserModule::encrypting(microtime().$model->password);
-						$new_password->save();
-						Yii::app()->user->setFlash('profileMessage',Yii::t('user', "New password is saved."));
-						$this->redirect(array("profile"));
+						$new_password->activkey = UserModule::encrypting(microtime().$model->password);
+						if ($new_password->save()){
+							Yii::app()->user->setFlash('success',Yii::t('user', "New password is saved."));
+							$this->redirect(array("profile"));
+						}
 					}
 			}
-			$this->render('changepassword',array('model'=>$model));
+			$this->render('changePassword',array('model'=>$model));
 	    }
-	}
-
-	/**
-	 * Returns the data model based on the primary key given in the GET variable.
-	 * If the data model is not found, an HTTP exception will be raised.
-	 * @param integer the primary key value. Defaults to null, meaning using the 'id' GET variable
-	 */
-	public function loadUser()
-	{
-		if($this->_model===null)
-		{
-			if(Yii::app()->user->id)
-				$this->_model=Yii::app()->controller->module->user();
-			if($this->_model===null)
-				$this->redirect(Yii::app()->controller->module->loginUrl);
-		}
-		return $this->_model;
 	}
 }
