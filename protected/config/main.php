@@ -5,6 +5,8 @@
 return CMap::mergeArray(require(dirname(__FILE__).'/database.php'), array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'My Web Application',
+	'language' => 'vi',
+	'sourceLanguage' => 'en',
 
 	// preloading 'log' component
 	'preload'=>array('log'),
@@ -29,11 +31,24 @@ return CMap::mergeArray(require(dirname(__FILE__).'/database.php'), array(
 		),
 		'messages'	=>	array(
 			'class'	=>	'CPhpMessageSource',
-			'onMissingTranslation' => array('CPhpMessageTranslator', 'writeMessage'),
+			'onMissingTranslation' => array('CPhpMessageTranslator', 'appendMessage'),
 		),
 		'setting' => array(
 			'class' => 'application.components.Settings',
 		) ,
+		// Caching method - for Debug is CDummyCache but for production is CFileCache
+		'cache' => array(
+				'class' => (YII_DEBUG)?'system.caching.CDummyCache':'system.caching.CFileCache',
+		) ,
+		'format'	=>	array(
+				'class'	=>	'ext.components.EFormatter',
+		),
+		'mail' => array(
+			  'class' => 'ext.mailer.EMailer',
+			  'pathViews' => 'application.views.email',
+			  'pathLayouts' => 'application.views.email.layouts'
+		   ),
+		
 	),
 	// application-level parameters that can be accessed
 	// using Yii::app()->params['paramName']

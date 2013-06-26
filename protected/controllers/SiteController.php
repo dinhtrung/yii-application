@@ -57,14 +57,17 @@ class SiteController extends WebBaseController
 			$model->attributes=$_POST['ContactForm'];
 			if($model->validate())
 			{
-				$name='=?UTF-8?B?'.base64_encode($model->name).'?=';
-				$subject='=?UTF-8?B?'.base64_encode($model->subject).'?=';
-				$headers="From: $name <{$model->email}>\r\n".
-					"Reply-To: {$model->email}\r\n".
-					"MIME-Version: 1.0\r\n".
-					"Content-type: text/plain; charset=UTF-8";
+				$message = 'Hello World!';
+				Yii::app()->mail->Host = 'smtp.yiiframework.com';
+				Yii::app()->mail->IsSMTP();
+				Yii::app()->mail->From = $model->email;
+				Yii::app()->mail->FromName = $model->name;
+//				Yii::app()->mail->AddReplyTo('wei@pradosoft.com');
 
-				mail(Yii::app()->params['adminEmail'],$subject,$model->body,$headers);
+				Yii::app()->mail->AddAddress(Yii::app()->params['adminEmail']);
+				Yii::app()->mail->Subject = $model->subject;
+				Yii::app()->mail->Body = $model->body;
+				Yii::app()->mail->Send();
 				Yii::app()->user->setFlash('contact','Thank you for contacting us. We will respond to you as soon as possible.');
 				$this->refresh();
 			}
