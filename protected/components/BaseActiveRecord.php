@@ -35,13 +35,21 @@ class BaseActiveRecord extends MultiActiveRecord {
 			return CVarDumper::dumpAsString($this->getAttributes(), 3, FALSE);
 		}
 	}
+	/**
+	 * Translate helper for a model.
+	 * @param string $message
+	 * @return string the translated string
+	 */
+	public function t($message){
+		return Yii::t(get_class($this), $message);
+	}
 
 	/**
 	 * Return attribute label for an attribute
 	 * @see CActiveRecord::getAttributeLabel()
 	 */
 	public function getAttributeLabel($attribute){
-		return Yii::t(basename(realpath(__DIR__ . '/../')), ucfirst($attribute));
+		return $this->t(ucfirst($attribute));
 	}
 
     /**
@@ -132,5 +140,12 @@ class BaseActiveRecord extends MultiActiveRecord {
      */
     protected function createTable(){
     	return FALSE;
+    }
+    
+    /**
+     * Return a list Data
+     */
+    public function listData($required = TRUE, $condition = NULL, $params = array()){
+    	return CHtml::listData($this->findAll($condition, $params), $this->primaryKey, $this->__toString());
     }
 }

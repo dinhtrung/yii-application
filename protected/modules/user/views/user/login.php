@@ -8,7 +8,7 @@ $this->breadcrumbs=array(
 ?>
 <div class="span8 offset2">
 
-<h1><?php echo $this->pageTitle = Yii::t('app', ':app Login', array(':app' => Yii::app()->name)); ?></h1>
+<h1><?php echo $this->pageTitle = Yii::t('app', 'Login'); ?></h1>
 
 <?php echo TbHtml::well(Yii::t('app', 'Please fill out the following form with your login credentials')); ?>
 

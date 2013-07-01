@@ -37,10 +37,6 @@ abstract class WebBaseController extends BaseController
 	function filters() {
 		return array(
 			array('rights.components.RightsFilter'),
-//			"Language",
-//			array(
-//            	"ext.components.ESetReturnUrlFilter + index, admin, view",
-//			)
         );
 	}
 	

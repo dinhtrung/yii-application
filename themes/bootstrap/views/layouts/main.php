@@ -25,13 +25,11 @@
 <div class="container" id="page">
 
 	<?php if(isset($this->breadcrumbs)):?>
-		<?php TbHtml::breadcrumbs($this->breadcrumbs); ?>
+		<?php echo TbHtml::breadcrumbs($this->breadcrumbs); ?>
 	<?php endif?>
 	
-	<?php foreach (Yii::app()->user->getFlashes() as $color => $message){
-		echo TbHtml::alert($color, $message);
-	}?>
-
+	<?php $this->widget('bootstrap.widgets.TbAlert'); ?>
+	
 	<?php echo $content; ?>
 
 </div><!-- page -->
