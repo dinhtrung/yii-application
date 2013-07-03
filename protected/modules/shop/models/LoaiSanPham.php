@@ -59,7 +59,7 @@ class LoaiSanPham extends BaseActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('root, lft, rgt, level, thoiGianTao, thoiGianSua, tieuDe, moTa', 'required'),
+			array('tieuDe, moTa', 'required'),
 			array('root, lft, rgt, level, thoiGianTao, thoiGianSua', 'numerical', 'integerOnly'=>true),
 			array('tieuDe', 'length', 'max'=>255),
 			array('tieuDe', 'unique'),
@@ -89,6 +89,32 @@ class LoaiSanPham extends BaseActiveRecord
 				'updateAttribute' => 'thoiGianSua',
 			)
 		);
+	}
+	
+	/**
+	 * ==================== HELPER FUNCTIONS =====================
+	 */
+	/*
+	 * Category Helper functions
+	*/
+	public static function getOption($rootId = NULL){
+		$output = array();
+		if (is_null($rootId)) {
+			$items = self::model()->roots()->findAll();
+			foreach ($items as $n => $item){
+				$output += self::getOption($item);
+			}
+		} elseif ($rootId instanceof LoaiSanPham) {
+			$output[$rootId->id] = str_repeat('-', $rootId->level) . ' ' .$rootId->tieuDe;
+			$children = $rootId->children()->findAll();
+			foreach ($children as $child){
+				$output += self::getOption($child);
+			}
+		} else {
+			$item = self::model()->findByPk($rootId);
+			return self::getOption($item);
+		}
+		return $output;
 	}
 	
 
