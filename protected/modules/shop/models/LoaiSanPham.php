@@ -96,7 +96,7 @@ class LoaiSanPham extends BaseActiveRecord
 	 */
 	/*
 	 * Category Helper functions
-	*/
+	 */
 	public static function getOption($rootId = NULL){
 		$output = array();
 		if (is_null($rootId)) {
@@ -113,6 +113,69 @@ class LoaiSanPham extends BaseActiveRecord
 		} else {
 			$item = self::model()->findByPk($rootId);
 			return self::getOption($item);
+		}
+		return $output;
+	}
+	/*
+	 * Dropdown Menu functions
+	 */
+	public static function getDropDownMenuItems($rootId = NULL){
+		$output = array();
+		if (is_null($rootId)) {
+			$items = self::model()->roots()->findAll();
+			foreach ($items as $n => $item){
+				$output += self::getDropDownMenuItems($item);
+			}
+		} elseif ($rootId instanceof LoaiSanPham) {
+			$output[$rootId->id] = array(
+				'label'	=>	$rootId->tieuDe,
+				'title' =>  $rootId->moTa,
+				'url'	=>	array('/shop/category/view', 'id' => $rootId->id),
+			);
+			$items = array();
+			$children = $rootId->children()->findAll();
+			foreach ($children as $child){
+				$items += self::getDropDownMenuItems($child);
+			}
+			if (! empty($items)) {
+				$output[$rootId->id]['items'] = $items;
+				$output[$rootId->id]['items'][] = TbHtml::menuDivider();
+			}
+		} else {
+			$item = self::model()->findByPk($rootId);
+			return self::getDropDownMenuItems($item);
+		}
+		return $output;
+	}
+	
+	/*
+	 * Category Menu functions
+	 */
+	public static function getMenuItems($rootId = NULL){
+		$output = array();
+		if (is_null($rootId)) {
+			$items = self::model()->roots()->findAll();
+			foreach ($items as $n => $item){
+				$output += self::getMenuItems($item);
+			}
+		} elseif ($rootId instanceof LoaiSanPham) {
+			$output[$rootId->id] = array(
+				'label'	=>	$rootId->tieuDe,
+				'title' =>  $rootId->moTa,
+				'url'	=>	array('/shop/category/view', 'id' => $rootId->id),
+			);
+			$items = array();
+			$children = $rootId->children()->findAll();
+			foreach ($children as $child){
+				$items += self::getMenuItems($child);
+			}
+			if (! empty($items)) {
+				$output[$rootId->id][] += TbHtml::menuDivider();
+				$output += $items;
+			}
+		} else {
+			$item = self::model()->findByPk($rootId);
+			return self::getMenuItems($item);
 		}
 		return $output;
 	}
