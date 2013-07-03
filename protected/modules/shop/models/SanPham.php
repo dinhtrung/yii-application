@@ -12,8 +12,13 @@
  * @property integer $thoiGianSua
  * @property integer $loaiSanPham
  */
+Yii::import('ext.helpers.*');
 class SanPham extends BaseActiveRecord
 {
+	public static $thumbDir = 'webroot.files.sanpham.thumbnails';
+	public static $thumbUrl = '/files/sanpham/thumbnails';
+	public static $slideDir = 'webroot.files.sanpham.slides';
+	public static $slideUrl = '/files/sanpham/slides';
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return SanPham the static model class
@@ -59,16 +64,41 @@ class SanPham extends BaseActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('tenSanPham, moTa, anh, giaBan, loaiSanPham', 'required'),
+			array('tenSanPham', 'required'),
+			array('moTa', 'safe'),
 			array('loaiSanPham', 'numerical', 'integerOnly'=>true),
 			array('giaBan', 'numerical'),
-			array('tenSanPham, anh', 'length', 'max'=>255),
+			array('anh', 'file', 'allowEmpty'=>true, 'types'=>'jpg,jpeg,gif,png'),
+			array('tenSanPham', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, tenSanPham, moTa, anh, giaBan, thoiGianTao, thoiGianSua, loaiSanPham', 'safe', 'on'=>'search'),
 			// Relations
 			array('loai, daDatHang, slide', 'safe', 'on' => 'insert,update'),		);
 	}
+	
+	/**
+	 * Return the path for slide images
+	 */
+	public function saveFile($file, $dir){
+		if ($file instanceof CUploadedFile){
+			$filename = Transliteration::file($file->name);
+			$filePath = $dir . DIRECTORY_SEPARATOR . $filename;
+			if (file_exists($filePath)){
+				$i = 0;
+				$ext = $file->getExtensionName();
+				if ($ext) $prefix = substr($filename, 0, strpos($filename, $ext) - 1);
+				while (file_exists($filePath = $dir .DIRECTORY_SEPARATOR . $prefix . '_' . $i . '.' . $ext)){
+					$i++;
+				}
+			}
+			DirectoryHelper::safe_directory(dirname($filePath));
+			if ($file->saveAs($filePath)) return basename($filePath);
+		}
+		return NULL;
+	}
+	
+	
 	/**
 	 * Add nestedSetBehavior to this
 	 * @see CModel::behaviors()

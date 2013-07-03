@@ -31,6 +31,13 @@ class SlideSanPham extends BaseActiveRecord
 	{
 		return '{{slideSanPham}}';
 	}
+	
+	/**
+	 * Return the text display this model in Details and Grid View
+	 */
+	public function __toString(){
+		return '#' . $this->thuTu . ' : ' . $this->tenFile;
+	}
 
 	/**
 	 * @return array relational rules.
@@ -66,6 +73,14 @@ class SlideSanPham extends BaseActiveRecord
 					'params' => array(':spid' => $this->spid)
 			)),
 		);
+	}
+	
+	/**
+	 * Automatically delete associated files after delete the record
+	 */
+	protected function afterDelete() {
+		@unlink(Yii::getPathOfAlias(SanPham::$slideDir) . DIRECTORY_SEPARATOR . $this->tenFile);
+		return parent::afterDelete();
 	}
 
 	/**
