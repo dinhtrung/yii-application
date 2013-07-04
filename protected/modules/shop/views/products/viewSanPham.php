@@ -12,10 +12,12 @@ $this->renderPartial('_menuSanPham');
 
 <h1><?php echo $this->pageTitle = Yii::t('app', '<small>SanPham</small> :title', array(':title' => $model->tenSanPham)); ?></h1>
 
-<?php echo TbHtml::thumbnail(TbHtml::imagePolaroid(Yii::app()->baseUrl . SanPham::$thumbUrl . '/' . $model->anh)); ?>
-<div class="well">
-<?php $this->beginWidget('CMarkdown'); ?><?php echo $model->moTa; ?><?php $this->endWidget(); ?>
-</div>
+<?php echo TbHtml::imagePolaroid(Yii::app()->baseUrl . SanPham::$thumbUrl . '/' . $model->anh); ?>
+
+<?php $this->beginWidget('CMarkdown'); ?>
+<?php echo $model->moTa; ?>
+<?php $this->endWidget(); ?>
+
 <?php $this->widget('zii.widgets.CDetailView',array(
 	'data'=>$model,
 	'attributes'=>array(

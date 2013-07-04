@@ -1,5 +1,3 @@
-
-?>
 <?php
 /* @var $this AdminController */
 /* @var $model SanPham */

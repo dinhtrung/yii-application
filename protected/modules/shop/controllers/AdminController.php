@@ -44,6 +44,7 @@ class AdminController extends WebBaseController
 			$model->attributes=$_POST['SanPham'];
 			if ($model->validate()){
 				// Luu anh thumbnail
+				// @TODO: Convert the image size to 320x240
 				$model->anh = $model->saveFile(
 						CUploadedFile::getInstance($model, 'anh'), 
 						Yii::getPathOfAlias(SanPham::$thumbDir)
