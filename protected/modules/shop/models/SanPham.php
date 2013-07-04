@@ -139,4 +139,39 @@ class SanPham extends BaseActiveRecord
 			Yii::log($e->getMessage(), 'warning');
 		}
 	}
+	
+	/**
+	 * @link: http://code.google.com/p/yii/issues/detail?id=1374
+	 */
+	public function populateRecords($data,$callAfterFind=true)
+	{
+		$records=array();
+		foreach($data as $attributes)
+		{
+			$record=$this->populateRecord($attributes,$callAfterFind);
+			if ($record === null) {
+				continue;
+			}
+	
+			$pk = $record->getPrimaryKey();
+// 			if ($pk === null || is_array($pk)) {
+// 				$records[]=$record;
+// 			}
+// 			else {
+// 				$records[$pk] = $record;
+// 			}
+			$records[$pk] = $record;
+		}
+		return $records;
+	}
+	
+	/**
+	 * soLuong
+	 */
+	public function getSoLuong(){
+		if (Yii::app()->user && ($cart = Yii::app()->user->getState('cart'))){
+			if (array_key_exists($this->primaryKey, $cart)) return $cart[$this->primaryKey];
+		}
+		return NULL;
+	}
 }

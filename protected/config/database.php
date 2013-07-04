@@ -13,14 +13,71 @@ return array(
 			'tablePrefix' => '',
 		),
 		// uncomment the following to use a MySQL database
-		/*
-		'db'=>array(
-			'connectionString' => 'mysql:host=localhost;dbname=testdrive',
+// 		'projectbankDb'=>array(
+// 			'class'	=>	'CDbConnection',
+// 			'connectionString' => 'mysql:host=localhost;dbname=yii_projectbank',
+// 			'emulatePrepare' => true,
+// 			'username' => 'root',
+// 			'password' => 'myroot',
+// 			'charset' => 'utf8',
+// 			'tablePrefix' => '',
+// 		),
+// 		'dienlucDb'=>array(
+// 			'class'	=>	'CDbConnection',
+// 			'connectionString' => 'mysql:host=localhost;dbname=yii_dienluc',
+// 			'emulatePrepare' => true,
+// 			'username' => 'root',
+// 			'password' => 'myroot',
+// 			'charset' => 'utf8',
+// 			'tablePrefix' => '',
+// 		),
+// 		'ussdDb'=>array(
+// 			'class'	=>	'CDbConnection',
+// 			'connectionString' => 'mysql:host=localhost;dbname=yii_ussd',
+// 			'emulatePrepare' => true,
+// 			'enableParamLogging' => TRUE,
+// 			'username' => 'root',
+// 			'password' => 'myroot',
+// 			'charset' => 'utf8',
+// 			'tablePrefix' => '',
+// 		),
+// 		'viewsDb'=>array(
+// 			'class'	=>	'CDbConnection',
+// 			'connectionString' => 'mysql:host=localhost;dbname=yii_views',
+// 			'emulatePrepare' => true,
+// 			'enableParamLogging' => TRUE,
+// 			'username' => 'root',
+// 			'password' => 'myroot',
+// 			'charset' => 'utf8',
+// 			'tablePrefix' => '',
+// 		),
+// 		'samplesDb'=>array(
+// 			'class'	=>	'CDbConnection',
+// 			'connectionString' => 'mysql:host=localhost;dbname=classicmodels',
+// 			'emulatePrepare' => true,
+// 			'enableParamLogging' => TRUE,
+// 			'username' => 'root',
+// 			'password' => 'myroot',
+// 			'charset' => 'utf8',
+// 			'tablePrefix' => '',
+// 		),
+		'shopDb'=>array(
+			'class'	=>	'CDbConnection',
+			'connectionString' => 'mysql:host=localhost;dbname=yii_shop',
 			'emulatePrepare' => true,
+			'enableParamLogging' => TRUE,
 			'username' => 'root',
-			'password' => '',
+			'password' => 'myroot',
 			'charset' => 'utf8',
+			'tablePrefix' => '',
 		),
-		*/
 	),
+	'modules'	=>	array(
+// 		'projectbank',
+// 		'dienluc',
+// 		'ussd',
+// 		'views',
+// 		'samples',	// Used for Views
+		'shop',
+	)
 );

@@ -2,6 +2,7 @@
 Yii::setPathOfAlias("bootstrap", realpath(__DIR__ . '/../extensions/bootstrap'));
 return CMap::mergeArray(require(dirname(__FILE__).'/main.php'),	array(
 	'theme'		=>	'bootstrap',
+	'name'	=>	'PHẦN MỀM QUẢN LÝ ĐIỆN NĂNG TIÊU THỤ',
 	'preload' 	=>	array('bootstrap'),
 	'import'	=>	array(
 		// Yiistrap
@@ -68,33 +69,11 @@ return CMap::mergeArray(require(dirname(__FILE__).'/main.php'),	array(
 			'widgetFactory'=> array(
 				'class' => 'CWidgetFactory',
 				'widgets' => array(
-					'CGridView'=>array(
-							'itemsCssClass'=>'item-class',
-							'pagerCssClass'=>'pager-class'
+					'TbGridView'=>array(
+						'type'=>'bordered striped hover',
 					),
 					'TbActiveForm'=>array(
 						'htmlOptions'=>array('class' => 'form-horizontal'),
-					),
-					'CJuiAccordion'=>array(
-							'htmlOptions'=>array('class'=>'shadowaccordion'),
-					),
-					'CJuiProgressBar'=>array(
-							'htmlOptions'=>array('class'=>'shadowprogressbar'),
-					),
-					'CJuiSlider'=>array(
-							'htmlOptions'=>array('class'=>'shadowslider'),
-					),
-					'CJuiSliderInput'=>array(
-							'htmlOptions'=>array('class'=>'shadowslider'),
-					),
-					'CJuiButton'=>array(
-							'htmlOptions'=>array('class'=>'shadowbutton'),
-					),
-					'CJuiButton'=>array(
-							'htmlOptions'=>array('class'=>'shadowbutton'),
-					),
-					'CJuiButton'=>array(
-							'htmlOptions'=>array('class'=>'button green'),
 					),
 				)
 			),

@@ -11,6 +11,9 @@
  */
 class DonHang extends BaseActiveRecord
 {
+	const STATUS_PENDING 	= -1;
+	const STATUS_PROCESSING = 0;
+	const STATUS_DONE = 1;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return DonHang the static model class

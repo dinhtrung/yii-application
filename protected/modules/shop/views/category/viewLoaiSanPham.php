@@ -12,21 +12,23 @@ $this->renderPartial('_menuLoaiSanPham');
 
 <h1><?php echo $this->pageTitle = Yii::t('app', 'Details of LoaiSanPham :tieuDe', array(':tieuDe' => $model->tieuDe)); ?></h1>
 
-<?php $this->widget('zii.widgets.CDetailView',array(
+<div class="well well-small">
+<?php $this->beginWidget('CMarkdown'); ?><?php echo $model->moTa; ?><?php $this->endWidget(); ?>
+</div>
+
+<?php /* $this->widget('zii.widgets.CDetailView',array(
 	'data'=>$model,
 	'attributes'=>array(
-		'tieuDe',
-		'moTa',
 		'thoiGianTao:datetime',
 		'thoiGianSua:datetime',
 	),
-)); ?>
+)); */ ?>
 
 <?php 
 $related = new SanPham('search');
 $related->loaiSanPham = $model->primaryKey;
 $this->widget('bootstrap.widgets.TbListView',array(
 	'dataProvider'=>$related->search(),
-	'itemView'=>'/admin/_viewSanPham',
+	'itemView'=>'shop.views.products._viewSanPham',
 ));; ?>
 
