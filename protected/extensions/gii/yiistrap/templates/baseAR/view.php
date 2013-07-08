@@ -16,7 +16,7 @@ $nameColumn=$this->guessNameColumn($this->tableSchema->columns);
 $nameColumn=$this->guessNameColumn($this->tableSchema->columns);
 $label=$this->pluralize($this->class2name($this->modelClass));
 echo "\$this->breadcrumbs=array(
-	Yii::t('app', '$label')	=>	array('index'),
+	Yii::t('{$this->t}', '$label')	=>	array('index'),
 	\$model->{$nameColumn},
 );\n";
 ?>
@@ -24,7 +24,7 @@ echo "\$this->breadcrumbs=array(
 $this->renderPartial('_menu<?php echo $this->modelClass; ?>');
 ?>
 
-<h1><?php echo "<?php echo \$this->pageTitle = Yii::t('app', '<small>Details of {$this->modelClass}</small> :title', array(':title' => \$model->{$nameColumn})); ?>"?></h1>
+<h1><?php echo "<?php echo \$this->pageTitle = Yii::t('{$this->t}', '<small>Details of {$this->modelClass}</small> :title', array(':title' => \$model->{$nameColumn})); ?>"?></h1>
 
 <?php echo "<?php"; ?> $this->widget('zii.widgets.CDetailView',array(
 	'data'=>$model,

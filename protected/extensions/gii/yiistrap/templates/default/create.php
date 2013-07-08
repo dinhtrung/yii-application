@@ -9,15 +9,20 @@
 /* @var $model <?php echo $this->getModelClass(); ?> */
 
 <?php
+echo "<?php\n";
 $label=$this->pluralize($this->class2name($this->modelClass));
 echo "\$this->breadcrumbs=array(
-	Yii::t('{$this->t}', '$label') =>array('index'),
-	Yii::t('app', 'Create'),
+	'$label'=>array('index'),
+	'Create',
 );\n";
 ?>
-$this->renderPartial('_menu<?php echo $this->modelClass; ?>');
+
+$this->menu=array(
+	array('label'=>'List <?php echo $this->modelClass; ?>', 'url'=>array('index')),
+	array('label'=>'Manage <?php echo $this->modelClass; ?>', 'url'=>array('admin')),
+);
 ?>
 
-<h1><?php echo "<?php echo \$this->pageTitle = Yii::t('{$this->t}', '<small>Create New</small> {$this->modelClass}'); ?>"?></h1>
+<h1>Create <?php echo $this->modelClass; ?></h1>
 
 <?php echo "<?php \$this->renderPartial('_form{$this->modelClass}', array('model'=>\$model)); ?>"; ?>

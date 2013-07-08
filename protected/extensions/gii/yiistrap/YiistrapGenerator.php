@@ -11,5 +11,5 @@ Yii::import('gii.generators.crud.CrudGenerator');
 
 class YiistrapGenerator extends CrudGenerator
 {
-	public $codeModel = 'ext.gtc.yiistrap.YiistrapCode';
+	public $codeModel = 'ext.gii.yiistrap.YiistrapCode';
 }

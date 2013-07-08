@@ -18,7 +18,7 @@ $nameColumn=$this->guessNameColumn($this->tableSchema->columns);
 $nameColumn=$this->guessNameColumn($this->tableSchema->columns);
 $label=$this->pluralize($this->class2name($this->modelClass));
 echo "\$this->breadcrumbs=array(
-	Yii::t('app', '$label')=>array('index'),
+	Yii::t('{$this->t}', '$label')=>array('index'),
 	\$model->$nameColumn=>array('view',{$pk}),
 	Yii::t('app', 'Update'),
 );\n";
@@ -27,6 +27,6 @@ echo "\$this->breadcrumbs=array(
 $this->renderPartial('_menu<?php echo $this->modelClass; ?>');
 ?>
 
-<h1><?php echo "<?php echo \$this->pageTitle = Yii::t('app', '<small>Update {$this->modelClass}</small> :title', array(':title' => \$model->$nameColumn)); ?>"?></h1>
+<h1><?php echo "<?php echo \$this->pageTitle = Yii::t('{$this->t}', '<small>Update {$this->modelClass}</small> :title', array(':title' => \$model->$nameColumn)); ?>"?></h1>
 
 <?php echo "<?php \$this->renderPartial('_form{$this->modelClass}', array('model'=>\$model)); ?>"; ?>

@@ -129,6 +129,15 @@ class YiistrapCode extends CCodeModel
 		}
 		return Yii::app();
 	}
+	
+	public function getT(){
+		if(($pos=strpos($this->controller,'/'))!==false)
+		{
+			$id=substr($this->controller,0,$pos);
+				return $id;
+		}
+		return 'app';
+	}
 
 	public function getControllerID()
 	{

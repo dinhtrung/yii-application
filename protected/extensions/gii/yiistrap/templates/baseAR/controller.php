@@ -65,7 +65,7 @@ class <?php echo $this->controllerClass; ?> extends WebBaseController
 				// More customization goes here
 				
 				if($model->save()){
-					Yii::app()->user->setFlash('success', Yii::t('app', 'Successfully create new <?php echo $this->modelClass; ?> :title', array(':title' => $model-><?php echo $nameColumn; ?>))); 
+					Yii::app()->user->setFlash('success', Yii::t('<?php echo $this->t; ?>', 'Successfully create new <?php echo $this->modelClass; ?> :title', array(':title' => $model-><?php echo $nameColumn; ?>))); 
 <?php if (is_array($this->getTableSchema()->primaryKey)) { ?>				
 					$this->redirect(array('view',$model->primaryKey));
 <?php } else { ?>					
@@ -97,7 +97,7 @@ class <?php echo $this->controllerClass; ?> extends WebBaseController
 			if($model->validate()){
 				// More customization goes here
 				if ($model->save()){
-					Yii::app()->user->setFlash('success', Yii::t('app', 'Successfully update <?php echo $this->modelClass; ?> :title', array(':title' => $model-><?php echo $nameColumn; ?>)));
+					Yii::app()->user->setFlash('success', Yii::t('<?php echo $this->t; ?>', 'Successfully update <?php echo $this->modelClass; ?> :title', array(':title' => $model-><?php echo $nameColumn; ?>)));
 <?php if (is_array($this->getTableSchema()->primaryKey)) { ?>				
 					$this->redirect(array('view',$model->primaryKey));
 <?php } else { ?>					
@@ -122,7 +122,9 @@ class <?php echo $this->controllerClass; ?> extends WebBaseController
 		if (Yii::app()->request->isPostRequest)
 		{
 			// we only allow deletion via POST request
-			$this->loadModel('<?php echo $this->modelClass; ?>')->delete();
+			$model = $this->loadModel('<?php echo $this->modelClass; ?>');
+			if ($model->delete())
+				Yii::app()->user->setFlash('success', Yii::t('<?php echo $this->t; ?>', 'Successfully delete <?php echo $this->modelClass; ?> :title', array(':title' => $model-><?php echo $nameColumn; ?>)));
 
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 			if(!isset($_GET['ajax']))

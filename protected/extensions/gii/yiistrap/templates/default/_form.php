@@ -10,18 +10,18 @@
 /* @var $form TbActiveForm */
 ?>
 
+<div class="form">
+
 <?php echo "<?php \$form=\$this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 	'id'=>'".$this->class2id($this->modelClass)."-form',
 	// Please note: When you enable ajax validation, make sure the corresponding
 	// controller action is handling ajax validation correctly.
 	// There is a call to performAjaxValidation() commented in generated controller code.
 	// See class documentation of CActiveForm for details on this.
-	'enableAjaxValidation'	 => FALSE,
-	'enableClientValidation' => TRUE,
-	// 'htmlOptions'	=>	array('enctype' => 'multipart/form-data'),
+	'enableAjaxValidation'=>false,
 )); ?>\n"; ?>
 
-	<?php echo "<?php echo TbHtml::well(Yii::t('app', 'Fields with <span class=\"required\">*</span> are required.')); ?>";?>
+	<p class="help-block">Fields with <span class="required">*</span> are required.</p>
 
 	<?php echo "<?php echo \$form->errorSummary(\$model); ?>\n"; ?>
 
@@ -37,8 +37,10 @@ foreach($this->tableSchema->columns as $column)
 }
 ?>
 	<?php echo "<?php echo TbHtml::formActions(array(
-		TbHtml::submitButton(Yii::t('app', 'Submit'), array('color' => TbHtml::BUTTON_COLOR_PRIMARY)),
-		TbHtml::resetButton(Yii::t('app', 'Reset')),
+		TbHtml::submitButton('Submit', array('color' => TbHtml::BUTTON_COLOR_PRIMARY)),
+		TbHtml::resetButton('Reset'),
 	)); ?>"; ?>
 
 <?php echo "<?php \$this->endWidget(); ?>\n"; ?>
+
+</div><!-- form -->
