@@ -11,6 +11,6 @@ $this->breadcrumbs=array(
 $this->renderPartial('_menuSanPham');
 ?>
 
-<h1><?php echo $this->pageTitle = Yii::t('app', 'Update SanPham :title', array(':title' => $model->tenSanPham)); ?></h1>
+<h1><?php echo $this->pageTitle = Yii::t('app', '<small>Update SanPham</small> :title', array(':title' => $model->tenSanPham)); ?></h1>
 
 <?php $this->renderPartial('_formSanPham', array('model'=>$model)); ?>

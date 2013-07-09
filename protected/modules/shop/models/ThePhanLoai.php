@@ -25,7 +25,7 @@ class ThePhanLoai extends BaseActiveRecord
 	}
 
 	/**
-	 * @return string the associated database table name
+	 * @return string the associated database table the
 	 */
 	public function tableName()
 	{
@@ -37,8 +37,8 @@ class ThePhanLoai extends BaseActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
+		// NOTE: you may need to adjust the relation the and the related
+		// class the for the relations automatically generated below.
 		return array(
 			'sp' => array(self::MANY_MANY, 'SanPham', 'sanPham_the(tid, spid)'),
 		);
@@ -83,5 +83,67 @@ class ThePhanLoai extends BaseActiveRecord
 		} catch (CDbException $e){
 			Yii::log($e->getMessage(), 'warning');
 		}
+	}
+	
+	public static function string2array($tags)
+	{
+		return preg_split('/\s*,\s*/',trim($tags),-1,PREG_SPLIT_NO_EMPTY);
+	}
+	
+	public static function array2string($tags)
+	{
+		return implode(', ',$tags);
+	}
+	
+	public function updateFrequency($oldTags, $newTags, $pk = NULL)
+	{
+		$oldTags=self::string2array($oldTags);
+		$newTags=self::string2array($newTags);
+		$this->addTags(array_values(array_diff($newTags,$oldTags)), $pk);
+		$this->removeTags(array_values(array_diff($oldTags,$newTags)), $pk);
+	}
+	
+	public function addTags($tags, $spid)
+	{
+		$criteria=new CDbCriteria;
+		$criteria->addInCondition('the',$tags);
+		$this->updateCounters(array('soLuong'=>1),$criteria);
+		foreach($tags as $the)
+		{
+			if(!$this->exists('the=:the',array(':the'=>$the)))
+			{
+				$tag=new ThePhanLoai();
+				$tag->the=$the;
+				$tag->soLuong=1;
+				$tag->save();
+			}
+		}
+		$models = $this->query($criteria, TRUE);
+		foreach ($models as $tag){
+			$join = new SanPhamThe();
+			$join->tid = $tag->id;
+			$join->spid = $spid;
+			$join->save();
+		}
+	}
+	
+	public function removeTags($tags, $spid)
+	{
+		if(empty($tags)) return;
+		// Delete the join tables
+		$criteria=new CDbCriteria;
+		$criteria->join = 'JOIN {{sanPham_the}} ON id = tid';
+		$criteria->addInCondition('the',$tags);
+		$criteria->addCondition("spid=$spid");
+		$joinRow = SanPhamThe::model()->query($criteria, TRUE);
+		foreach ($joinRow as $r) $r->delete();
+		
+		$this->updateCounters(array('soLuong'=>-1),$criteria);
+		$this->deleteAll('soLuong<=0');
+		// Delete the main table
+		$criteria=new CDbCriteria;
+		$criteria->addInCondition('the',$tags);
+		$this->updateCounters(array('soLuong'=>-1),$criteria);
+		$this->deleteAll('soLuong<=0');
 	}
 }

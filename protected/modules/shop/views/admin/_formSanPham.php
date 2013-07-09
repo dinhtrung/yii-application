@@ -3,7 +3,9 @@
 /* @var $model SanPham */
 /* @var $form TbActiveForm */
 ?>
-
+<div class="row">
+	<div class="span9">
+	
 <?php $form=$this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 	'id'=>'san-pham-form',
 	// Please note: When you enable ajax validation, make sure the corresponding
@@ -35,9 +37,8 @@
 		'attribute' => 'slide',
 		'accept' => 'jpg|png|jpeg|gif',
 		'options' => array() ,
-	), TRUE); ?> 
-	
-	<?php if (! $model->isNewRecord) {
+	), TRUE); 
+	if (! $model->isNewRecord) {
 		$slides = new SlideSanPham('search');
 		$slides->spid = $model->primaryKey;
 		$input .= $this->widget('bootstrap.widgets.TbGridView', array(
@@ -53,12 +54,28 @@
 				),
 			)
 		), TRUE);
-	}?>
+	}
+	echo TbHtml::customActiveControlGroup($input, $model, 'slide');
+	?>
 	
-	<?php echo TbHtml::customControlGroup($input, 'slide'); ?>
-
+	<?php $model->tags = $model->tagString; 
+	$input = $this->widget('CAutoComplete', array(
+			'model'=>$model,
+			'attribute'=>'tags',
+			'url'=>array('suggestTags'),
+			'multiple'=>true,
+			'htmlOptions'=>array('size'=>50),
+		), TRUE);
+	echo TbHtml::customActiveControlGroup($input, $model, 'tags');
+	?>
+	
 	<?php echo TbHtml::formActions(array(
 		TbHtml::submitButton(Yii::t('app', 'Submit'), array('color' => TbHtml::BUTTON_COLOR_PRIMARY)),
 		TbHtml::resetButton(Yii::t('app', 'Reset')),
 	)); ?>
 <?php $this->endWidget(); ?>
+	</div>
+	<div class="span3">
+		<?php $this->renderPartial('../products/_viewSanPham', array('data' => $model, 'index' => 1)); ?>
+	</div>
+</div>

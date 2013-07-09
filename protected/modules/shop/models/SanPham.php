@@ -19,6 +19,7 @@ class SanPham extends BaseActiveRecord
 	public static $thumbUrl = '/files/sanpham/thumbnails';
 	public static $slideDir = 'webroot.files.sanpham.slides';
 	public static $slideUrl = '/files/sanpham/slides';
+	public $tags = '';
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return SanPham the static model class
@@ -74,7 +75,7 @@ class SanPham extends BaseActiveRecord
 			// Please remove those attributes that should not be searched.
 			array('id, tenSanPham, moTa, anh, giaBan, thoiGianTao, thoiGianSua, loaiSanPham', 'safe', 'on'=>'search'),
 			// Relations
-			array('loai, daDatHang, slide', 'safe', 'on' => 'insert,update'),		);
+			array('loai, daDatHang, slide, tags', 'safe', 'on' => 'insert,update'),		);
 	}
 	
 	/**
@@ -140,30 +141,6 @@ class SanPham extends BaseActiveRecord
 		}
 	}
 	
-	/**
-	 * @link: http://code.google.com/p/yii/issues/detail?id=1374
-	 */
-	public function populateRecords($data,$callAfterFind=true)
-	{
-		$records=array();
-		foreach($data as $attributes)
-		{
-			$record=$this->populateRecord($attributes,$callAfterFind);
-			if ($record === null) {
-				continue;
-			}
-	
-			$pk = $record->getPrimaryKey();
-// 			if ($pk === null || is_array($pk)) {
-// 				$records[]=$record;
-// 			}
-// 			else {
-// 				$records[$pk] = $record;
-// 			}
-			$records[$pk] = $record;
-		}
-		return $records;
-	}
 	
 	/**
 	 * soLuong
@@ -173,5 +150,29 @@ class SanPham extends BaseActiveRecord
 			if (array_key_exists($this->primaryKey, $cart)) return $cart[$this->primaryKey];
 		}
 		return NULL;
+	}
+	
+	/**
+	 * Return the tags attribute
+	 */
+	public function getTags(){
+		$criteria = new CDbCriteria();
+		$criteria->select = 'the';
+		$criteria->join = 'LEFT JOIN {{sanPham_the}} ON t.id=tid';
+		$criteria->condition = 'spid=:spid';
+		$criteria->params = array(':spid' => $this->primaryKey);
+		$tags = ThePhanLoai::model()->query($criteria, TRUE);
+		return $tags;
+	}
+	/**
+	 * Return the tag as string
+	 */
+	public function getTagString(){
+		$tagString = array();
+		$tags = $this->getTags();
+		foreach ($tags as $t){
+			$tagString[] = $t->the;
+		}
+		return implode(', ', $tagString);		
 	}
 }

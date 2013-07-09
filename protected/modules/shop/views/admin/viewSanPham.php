@@ -12,9 +12,13 @@ $this->renderPartial('_menuSanPham');
 
 <h1><?php echo $this->pageTitle = Yii::t('app', '<small>SanPham</small> :title', array(':title' => $model->tenSanPham)); ?></h1>
 
-<?php echo TbHtml::thumbnail(TbHtml::imagePolaroid(Yii::app()->baseUrl . SanPham::$thumbUrl . '/' . $model->anh)); ?>
-<div class="well">
-<?php $this->beginWidget('CMarkdown'); ?><?php echo $model->moTa; ?><?php $this->endWidget(); ?>
+<div class="row">
+	<div class="span3">
+		<?php echo TbHtml::thumbnail(TbHtml::imagePolaroid(Yii::app()->baseUrl . SanPham::$thumbUrl . '/' . $model->anh)); ?>
+	</div>
+	<div class="span6">
+		<?php $this->beginWidget('CMarkdown'); ?><?php echo $model->moTa; ?><?php $this->endWidget(); ?>
+	</div>
 </div>
 <?php $this->widget('zii.widgets.CDetailView',array(
 	'data'=>$model,
@@ -24,6 +28,7 @@ $this->renderPartial('_menuSanPham');
 		'thoiGianTao',
 		'thoiGianSua',
 		'loaiSanPham',
+		'tagString',
 	),
 )); ?>
 

@@ -2,6 +2,9 @@
 
 class AdminController extends WebBaseController
 {
+	public function allowedActions(){
+		return 'suggestTags';
+	}
 
 	/**
 	 * Displays a particular model.
@@ -63,6 +66,8 @@ class AdminController extends WebBaseController
 							$cnt++;
 						}
 					}
+					
+					ThePhanLoai::model()->updateFrequency('', $model->tags);
 					
 					Yii::app()->user->setFlash('success', Yii::t('app', 'Successfully create new SanPham :title', array(':title' => $model->id))); 
 					
@@ -126,6 +131,8 @@ class AdminController extends WebBaseController
 							$slideModel->save();
 						}
 					}
+					// Cap nhat so luong cac the phan loai
+					ThePhanLoai::model()->updateFrequency($model->tagString, $model->tags, $model->primaryKey);
 					
 					Yii::app()->user->setFlash('success', Yii::t('app', 'Successfully update SanPham :title', array(':title' => $model->id)));
 					
@@ -173,5 +180,29 @@ class AdminController extends WebBaseController
 		else
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
 		
+	}
+	
+	/**
+	 * Suggests tags based on the current user input.
+	 * This is called via AJAX when the user is entering the tags input.
+	 */
+	public function actionSuggestTags()
+	{
+		if(isset($_GET['q']) && ($keyword=trim($_GET['q']))!=='')
+		{
+			$tags=ThePhanLoai::model()->findAll(array(
+				'condition'=>'the LIKE :keyword',
+				'order'=>'soLuong DESC, the',
+				'limit'=>$_GET['limit'],
+				'params'=>array(
+					':keyword'=>'%'.strtr($keyword,array('%'=>'\%', '_'=>'\_', '\\'=>'\\\\')).'%',
+				),
+			));
+			$names=array();
+			foreach($tags as $tag)
+				$names[]=$tag->name;
+			if($names!==array())
+				echo implode("\n",$names);
+		}
 	}
 }
