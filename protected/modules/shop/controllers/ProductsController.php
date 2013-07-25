@@ -41,6 +41,7 @@ class ProductsController extends WebBaseController
 			$cart[$model->primaryKey] = 1;
 		Yii::app()->user->setState('cart', $cart);
 		Yii::app()->user->setFlash('success', 'Succesfully add item :title to your cart', array(':title' => $model->tenSanPham));
+		if (isset($_GET['returnUrl'])) $this->redirect($_GET['returnUrl']);
 		$this->redirect(array('view', 'id' => $model->primaryKey));
 	}
 	/**
@@ -51,25 +52,36 @@ class ProductsController extends WebBaseController
 		$cart = Yii::app()->user->getState('cart', array());
 		// Lay thong tin san pham
 		$ids = array_keys($cart);
-		$sanPham = SanPham::model()->findAllByPk($ids);
+		$sanPham = SanPham::model()->findAllByPk($ids, array('index' => 'id'));
 		// @TODO Tao Nguoi Dung + Gui Mail Thong Bao..
+		if (Yii::app()->user->isGuest){
+			$newUser = new User();
+		}
 		// @FIXME Tao Don Hang
 		$donHang = new DonHang();
 		$donHang->uid = Yii::app()->user->id;
 		$donHang->maDonHang = Yii::app()->user->getStateKeyPrefix();
 		$donHang->trangThai = DonHang::STATUS_PENDING;
-		$donHang->save();
-		// @FIXME Tao danh sach mat hang
-		foreach ($cart as $spid => $soLuong){
-			$spdh = new SanPhamDonHang();
-			$spdh->spid = $spid;
-			$spdh->soLuong = $soLuong;
-			$spdh->donGiaSp = $sanPham[$spid]->giaBan;
-			$spdh->save();
+		if (! $donHang->save()){
+			Yii::app()->user->setFlash('error', CHtml::errorSummary($donHang));
+		} else {
+			// @FIXME Tao danh sach mat hang
+			foreach ($cart as $spid => $soLuong){
+				$spdh = new SanPhamDonHang();
+				$spdh->spid = $spid;
+				$spdh->soLuong = $soLuong;
+				$spdh->donGiaSp = $sanPham[$spid]->giaBan;
+				$spdh->donHang = $donHang->maDonHang;
+				if (! $spdh->save()){
+					Yii::app()->user->setFlash('error', CHtml::errorSummary($spdh));
+				} else {
+					unset($cart[$spid]);
+				}
+			}
+			// @TODO Gui Email thong bao
+			Yii::app()->user->setFlash('success', 'Succesfully contact site admin');
+			Yii::app()->user->setState('cart', $cart);
 		}
-		// @TODO Gui Email thong bao
-		Yii::app()->user->setFlash('success', 'Succesfully contact site admin');
-		Yii::app()->user->setState('cart', array());
-		$this->redirect(array('view', 'id' => $model->primaryKey));
+		$this->redirect(array('/'));
 	}
 }

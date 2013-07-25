@@ -15,7 +15,7 @@
 				)
 			); ?>
 	<nav class="well well-small">
-		<?php echo TbHtml::link(Yii::t('app', 'Add to Cart'), array('/shop/products/cart', 'id' => $data->id), array('class' => 'btn btn-danger')); ?>
+		<?php echo TbHtml::link(Yii::t('app', 'Add to Cart'), array('/shop/products/cart', 'id' => $data->id, 'returnUrl' => Yii::app()->request->url), array('class' => 'btn btn-danger')); ?>
 		<?php echo TbHtml::link(Yii::t('app', 'Details'), array('/shop/products/view', 'id' => $data->id), array('class' => 'btn btn-info pull-right')); ?>
 	</nav>
 </div>

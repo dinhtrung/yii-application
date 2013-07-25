@@ -146,4 +146,12 @@ class ThePhanLoai extends BaseActiveRecord
 		$this->updateCounters(array('soLuong'=>-1),$criteria);
 		$this->deleteAll('soLuong<=0');
 	}
+	
+	public function findTagWeights($maxTag = 20) {
+		$criteria = new CDbCriteria;
+		$criteria->limit = $maxTag;
+		$criteria->index = 'the';
+		$criteria->order = 'soLuong DESC';
+		return $this->findAll($criteria);
+	}
 }

@@ -57,7 +57,7 @@ class DonHang extends BaseActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('maDonHang, uid, ngayTao, ghiChu, trangThai', 'required'),
+			array('maDonHang, uid, trangThai', 'required'),
 			array('uid, ngayTao, trangThai', 'numerical', 'integerOnly'=>true),
 			array('maDonHang', 'length', 'max'=>64),
 			array('maDonHang', 'unique'),
@@ -65,8 +65,13 @@ class DonHang extends BaseActiveRecord
 			// Please remove those attributes that should not be searched.
 			array('maDonHang, uid, ngayTao, ghiChu, trangThai', 'safe', 'on'=>'search'),
 			// Relations
-			array('sp', 'safe', 'on' => 'insert,update'),		
+			array('sp, ghiChu', 'safe', 'on' => 'insert,update'),		
 		);
+	}
+	
+	public function afterValidate(){
+		$this->ngayTao = time();
+		return parent::afterValidate();
 	}
 
 	/**
